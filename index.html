@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💌 Cartinha para você 💖</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee);
+    background-size: 400% 400%;
+    animation: bgMove 10s ease infinite;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: "Poppins", sans-serif;
+  }
+
+  @keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Corações flutuando */
+  .heart {
+    position: fixed;
+    bottom: -10px;
+    font-size: 20px;
+    animation: subir 6s linear infinite;
+    opacity: 0.8;
+    z-index: 0;
+  }
+
+  @keyframes subir {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+  }
+
+  /* Envelope */
+  .envelope {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: transform 0.8s ease;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .flap {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 50%;
+    background: #ff6f91;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transform-origin: top;
+    transition: transform 0.8s ease;
+  }
+
+  .envelope.open .flap {
+    transform: rotateX(180deg);
+  }
+
+  .message {
+    opacity: 0;
+    text-align: center;
+    padding: 20px;
+    color: #ff6f91;
+    font-size: 1.1em;
+    max-width: 250px;
+    transition: opacity 1.5s ease;
+    line-height: 1.5em;
+  }
+
+  .envelope.open .message {
+    opacity: 1;
+  }
+
+  /* Botões */
+  .btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 12px 28px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    text-decoration: none;
+    text-align: center;
+    transition: 0.3s;
+  }
+
+  #reabrir {
+    background: #ff6f91;
+    color: white;
+  }
+
+  #reabrir:hover {
+    background: #ff507d;
+    transform: scale(1.05);
+  }
+
+  #surpresa {
+    background: #ffc107;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  #surpresa:hover {
+    background: #ffb300;
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 400px) {
+    .envelope {
+      width: 80%;
+      height: 150px;
+    }
+    .message {
+      font-size: 1em;
+    }
+    .btn {
+      padding: 10px 24px;
+      font-size: 0.9em;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="envelope" onclick="abrirCarta(this)">
+  <div class="flap"></div>
+  <div class="message" id="mensagem"></div>
+</div>
+
+<button id="reabrir" class="btn" onclick="reiniciar()">💌 Ler de novo</button>
+<a id="surpresa" class="btn" href="pagina-surpresa.html">🎁 Surpresa</a>
+
+
+<script>
+  function abrirCarta(el) {
+    const som = document.getElementById('somAbrir');
+    el.classList.toggle('open');
+    if (el.classList.contains('open')) {
+      som.currentTime = 0;
+      som.play();
+      escreverMensagem("Irei te esperar, até que a lua se apague e o sol já não brilhe mais. Minha alma, mesmo morta, estará viva pelo teu amor 🤍🤍");
+      document.getElementById('reabrir').style.display = 'block';
+    } else {
+      document.getElementById("mensagem").textContent = "";
+      document.getElementById('reabrir').style.display = 'none';
+    }
+  }
+
+  // Efeito de digitação
+  function escreverMensagem(texto) {
+    const msg = document.getElementById("mensagem");
+    msg.textContent = "";
+    let i = 0;
+    const intervalo = setInterval(() => {
+      msg.textContent += texto[i];
+      i++;
+      if (i === texto.length) clearInterval(intervalo);
+    }, 50);
+  }
+
+  // Botão para reabrir
+  function reiniciar() {
+    const carta = document.querySelector('.envelope');
+    carta.classList.remove('open');
+    document.getElementById('mensagem').textContent = "";
+    document.getElementById('reabrir').style.display = 'none';
+  }
+
+  // Corações subindo
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 20 + 10 + "px";
+    heart.innerHTML = "💖";
+    heart.style.animationDuration = (4 + Math.random() * 3) + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 7000);
+  }, 300);
+</script>
+</body>
+</html>
